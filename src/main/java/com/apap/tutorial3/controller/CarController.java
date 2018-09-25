@@ -4,7 +4,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.apap.tutorial3.model.CarModel;
 import com.apap.tutorial3.service.CarService;
@@ -38,5 +40,41 @@ public class CarController {
 		
 		model.addAttribute("listCar", archive);
 		return "viewall-car";
+	}
+	@RequestMapping(value="/car/view/{id}", method=RequestMethod.GET)
+	public String viewvar(@PathVariable String id, Model model) {
+		List<CarModel> archieve = mobilService.getCarList();
+		for (CarModel car : archieve) {
+			if(car.getId().equals(id)) {
+				model.addAttribute("car", car);
+				return  "view-car";
+			}
+		}
+		return "error";
+	}
+	@RequestMapping(value="/car/update/{id}/amount/{amount}", method=RequestMethod.GET)
+	public String changeAmount(@PathVariable String id, @PathVariable Integer amount, Model model) {
+		List<CarModel> archieve = mobilService.getCarList();
+		for (CarModel car : archieve) {
+			if(car.getId().equals(id)) {
+				car.setAmount(amount);
+				return "changeAmount";
+			}
+		}
+		return "error";
+	}
+	
+	@RequestMapping(value="/car/delete/{id}", method=RequestMethod.GET)
+	public String delete(@PathVariable String id, Model model) {
+		List<CarModel> archieve = mobilService.getCarList();
+		Integer counter = 0;
+		for (CarModel car : archieve) {
+			counter++;
+			if(car.getId().equals(id)){
+				archieve.remove(counter-1);
+				return "delete";
+			}
+		}
+		return "error";
 	}
 }

@@ -32,4 +32,11 @@ public class CarController {
 		model.addAttribute("car", archive);
 		return "view-car";
 	}
+	@RequestMapping("/car/viewall")
+	public String viewall(Model model) {
+		List <CarModel> archive = mobilService.getCarList();
+		
+		model.addAttribute("listCar", archive);
+		return "viewall-car";
+	}
 }
